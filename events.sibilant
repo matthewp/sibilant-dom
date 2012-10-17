@@ -1,0 +1,13 @@
+(defun listen! (el name fn &optional use-capture)
+  (call el.addEventListener name fn (or use-capture false)))
+
+(defun unlisten! (el name fn &optional use-capture)
+  (call el.removeEventListener name fn (or use-capture false)))
+
+(defun listen-once! (el name fn &optional use-capture)
+  (add-event el name (lambda ()
+                       (unlisten! el name fn use-capture)
+                       (call fn))
+             use-capture))
+
+(defun dom-ready (fn) (listen-once! window 'load fn))

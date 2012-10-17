@@ -1,0 +1,69 @@
+(defmacro element? (el)
+  (concat "(" (translate el) " instanceof HTMLElement)"))
+
+(defun by-id (el)
+  (ternary (string? el) (call document.getElementById el) el))
+
+(defun by-class (class-name)
+  (Array.prototype.slice.call
+   (call document.getElementsByClassName class-name)))
+
+(defun query (&rest args)
+  (defvar el (ternary (element? (last args))
+                      (last args) document))
+  (call el.querySelector (first args)))
+
+(defun query-all (&rest args)
+  (defvar el (ternary (element? (last args))
+                      (last args) document))
+  (Array.prototype.slice.call
+   (call el.querySelectorAll (first args))))
+
+(defun set-text! (el txt)
+  (if (defined? el.textContent)
+    (set el.textContent txt)
+    (set el.innerText txt))
+  txt)
+
+(defun clone (el &optional deep)
+  (call el.cloneNode (or deep false)))
+
+(defun children (el)
+  (Array.prototype.slice.call (get el 'children)))
+
+(defun parent (el)
+  (get el 'parentNode))
+
+(defun append! (parent child)
+  (call parent.appendChild child))
+
+(defun insert-before! (parent new-el ref-el)
+  (call parent.insertBefore new-el ref-el))
+
+(defun insert-after! (parent new-el ref-el)
+  (call parent.insertBefore new-el (get rel-el 'nextSibling)))
+
+(defun attr (el name)
+  (call el.getAttribute name))
+
+(defun remove-attr! (el name)
+  (call el.removeAttribute name))
+
+(defun set-attr! (el name &optional value)
+  (call el.setAttribute name value))
+
+(defun has-class? (el class-name)
+  (call el.classList.contains class-name))
+
+(defun seq (items)
+  (ternary (array? items) items (list items)))
+
+(defun add-class! (el class-name)
+  (each (class-name) (seq classnames)
+    (call el.classList.add class-name)))
+
+(defun remove-class! (el class-name)
+  (call el.classList.remove class-name))
+
+(defun toggle-class! (el class-name)
+  (call el.classList.toggle class-name))
