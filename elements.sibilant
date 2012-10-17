@@ -19,11 +19,24 @@
   (Array.prototype.slice.call
    (call el.querySelectorAll (first args))))
 
+(defun text (el)
+  (defvar key (defined? el.textContent) 'textContent 'innerText)
+  (get el key))
+
 (defun set-text! (el txt)
   (if (defined? el.textContent)
-    (set el.textContent txt)
-    (set el.innerText txt))
+    (setf el.textContent txt)
+    (setf el.innerText txt))
   txt)
+
+(defun html (el)
+  (get el 'innerHTML))
+
+(defun set-html! (el html)
+  (setf el.innerHTML html))
+
+(defun create-element (type)
+  (call document.createElement type))
 
 (defun clone (el &optional deep)
   (call el.cloneNode (or deep false)))
@@ -67,3 +80,9 @@
 
 (defun toggle-class! (el class-name)
   (call el.classList.toggle class-name))
+
+(defun value (el)
+  (get el 'value))
+
+(defun set-value! (el val)
+  (setf el.value val))
