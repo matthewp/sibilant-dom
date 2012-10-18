@@ -3,7 +3,7 @@
   (req.open
    (or (get options 'method) "GET") (get options 'url) true)
 
-  (each (key) (or (get options 'headers) (hash))
+  (each (key) (keys (or (get options 'headers) (hash)))
     (req.setRequestHeader key, (get (get options 'headers) 'key)))
 
   (defun on-load (e)

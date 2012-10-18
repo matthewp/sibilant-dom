@@ -20,7 +20,8 @@
    (call el.querySelectorAll (first args))))
 
 (defun text (el)
-  (defvar key (defined? el.textContent) 'textContent 'innerText)
+  (defvar key (ternary (defined? el.textContent)
+                       'textContent 'innerText))
   (get el key))
 
 (defun set-text! (el txt)
