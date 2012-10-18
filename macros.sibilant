@@ -1,0 +1,4 @@
+(defmacro wrap (&rest body)
+  (concat "(function() {"
+          (indent (join "\n" (map body translate)))
+          "})();"))

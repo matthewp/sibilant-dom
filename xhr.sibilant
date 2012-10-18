@@ -1,0 +1,17 @@
+(defun xhr (options callback errback)
+  (defvar req (new XMLHttpRequest))
+  (req.open
+   (or (get options 'method) "GET") (get options 'url) true)
+
+  (each (key) (or (get options 'headers) (hash))
+    (req.setRequestHeader key, (get (get options 'headers) 'key)))
+
+  (defun on-load (e)
+    (defvar is-success (contains? '(200 304 0) req.status))
+    (if is-success
+      (when callback (call callback e.target))
+      (when errback (call errback
+            (concat "Server responded with a status of " req.status)))))
+
+  (setf req.onload on-load)
+  (req.send (get options 'data)))
