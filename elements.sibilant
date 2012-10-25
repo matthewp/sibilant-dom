@@ -2,32 +2,32 @@
   (concat "(" (translate el) " instanceof HTMLElement)"))
 
 (defun by-id (el)
-  (ternary (string? el) (call document.getElementById el) el))
+  (ternary (string? el) (call document.get-element-by-id el) el))
 
 (defun by-class (class-name)
-  (Array.prototype.slice.call
-   (call document.getElementsByClassName class-name)))
+  (slice
+   (call document.get-elements-by-class-name class-name)))
 
 (defun query (&rest args)
   (defvar el (ternary (element? (last args))
                       (last args) document))
-  (call el.querySelector (first args)))
+  (call el.query-selector (first args)))
 
 (defun query-all (&rest args)
   (defvar el (ternary (element? (last args))
                       (last args) document))
-  (Array.prototype.slice.call
-   (call el.querySelectorAll (first args))))
+  (slice
+   (call el.query-selector-all (first args))))
 
 (defun text (el)
-  (defvar key (ternary (defined? el.textContent)
-                       'textContent 'innerText))
+  (defvar key (ternary (defined? el.text-content)
+                       'text-content 'inner-text))
   (get el key))
 
 (defun set-text! (el txt)
-  (if (defined? el.textContent)
-    (setf el.textContent txt)
-    (setf el.innerText txt))
+  (if (defined? el.text-content)
+    (setf el.text-content txt)
+    (setf el.inner-text txt))
   txt)
 
 (defun html (el)
@@ -36,51 +36,51 @@
 (defun set-html! (el html)
   (setf el.innerHTML html))
 
-(defun create-element (type)
-  (call document.createElement type))
+(defmacro create-element (type)
+  (call document.create-element type))
 
 (defun clone (el &optional deep)
-  (call el.cloneNode (or deep false)))
+  (call el.clone-node (or deep false)))
 
 (defun children (el)
-  (Array.prototype.slice.call (get el 'children)))
+  (slice (get el 'children)))
 
 (defun parent (el)
-  (get el 'parentNode))
+  (get el 'parent-node))
 
 (defun append! (parent child)
-  (call parent.appendChild child))
+  (call parent.append-child child))
 
 (defun insert-before! (parent new-el ref-el)
-  (call parent.insertBefore new-el ref-el))
+  (call parent.insert-before new-el ref-el))
 
 (defun insert-after! (parent new-el ref-el)
-  (call parent.insertBefore new-el (get rel-el 'nextSibling)))
+  (call parent.insert-before new-el (get rel-el 'next-sibling)))
 
 (defun attr (el name)
-  (call el.getAttribute name))
+  (call el.get-attribute name))
 
 (defun remove-attr! (el name)
-  (call el.removeAttribute name))
+  (call el.remove-attribute name))
 
 (defun set-attr! (el name &optional value)
-  (call el.setAttribute name value))
+  (call el.set-attribute name value))
 
 (defun has-class? (el class-name)
-  (call el.classList.contains class-name))
+  (call el.class-list.contains class-name))
 
 (defun seq (items)
   (ternary (array? items) items (list items)))
 
 (defun add-class! (el class-name)
   (each (class-name) (seq classnames)
-    (call el.classList.add class-name)))
+    (call el.class-list.add class-name)))
 
 (defun remove-class! (el class-name)
-  (call el.classList.remove class-name))
+  (call el.class-list.remove class-name))
 
 (defun toggle-class! (el class-name)
-  (call el.classList.toggle class-name))
+  (call el.class-list.toggle class-name))
 
 (defun value (el)
   (get el 'value))
